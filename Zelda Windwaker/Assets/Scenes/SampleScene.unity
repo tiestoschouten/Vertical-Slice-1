@@ -1971,7 +1971,10 @@ GameObject:
   - component: {fileID: 999936630}
   - component: {fileID: 999936629}
   - component: {fileID: 999936628}
+<<<<<<< HEAD
   - component: {fileID: 999936632}
+=======
+>>>>>>> master
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -2046,6 +2049,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
 --- !u!114 &999936632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2058,6 +2062,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 1430794544}
+=======
+>>>>>>> master
 --- !u!1 &1087559357
 GameObject:
   m_ObjectHideFlags: 0
