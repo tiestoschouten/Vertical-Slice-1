@@ -5,13 +5,10 @@ using UnityEngine.UI;
 public class CameraTest: MonoBehaviour
 {
 
-<<<<<<< HEAD
     [SerializeField]
     public Transform Player;
 
-=======
     public Transform Player;
->>>>>>> master
     int MoveSpeed = 0;
     int MaxDist = 15;
     int MinDist = 15;
