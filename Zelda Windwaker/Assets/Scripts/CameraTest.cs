@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class BossController : MonoBehaviour
+public class CameraTest: MonoBehaviour
 {
+
     [SerializeField]
-    private Transform Player;
-    int MoveSpeed = 4;
+    public Transform Player;
+
+    int MoveSpeed = 0;
     int MaxDist = 15;
-    int MinDist = 10;
+    int MinDist = 15;
 
 
 
