@@ -2,40 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class CameraTest: MonoBehaviour
+public class PointTowards: MonoBehaviour
 {
 
     [SerializeField]
     private Transform Player;
 
+    [SerializeField]
+    public bool isActive = false;
+
     private int MoveSpeed = 0;
     private int MaxDist = 15;
     private int MinDist = 15;
 
-
-
-
-    void Start()
-    {
-
-    }
-
     void Update()
     {
-        transform.LookAt(Player);
-
-        if (Vector3.Distance(transform.position, Player.position) >= MinDist)
+        if (isActive == true)
         {
+            transform.LookAt(Player);
 
-            transform.position += transform.forward * MoveSpeed * Time.deltaTime;
-
-
-
-            if (Vector3.Distance(transform.position, Player.position) <= MaxDist)
+            if (Vector3.Distance(transform.position, Player.position) >= MinDist)
             {
-                //Space for optional function
-            }
 
+                transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+
+
+
+                if (Vector3.Distance(transform.position, Player.position) <= MaxDist)
+                {
+                    //Space for optional function
+                }
+
+            }
         }
     }
 }

@@ -12,9 +12,8 @@ public class CameraOrbit : MonoBehaviour {
     private float mouseSensitivity = 4f;
     [SerializeField]
     private float orbitSpeed = 10f;
-
-    [SerializeField]
-    private bool lockOn = false;
+    
+    public bool lockOn = false;
 
 
 	void Start () {
@@ -30,23 +29,23 @@ public class CameraOrbit : MonoBehaviour {
 
         if (lockOn == false)
         {
-            if(Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
             {
                 localRotation.x += Input.GetAxis("Mouse X") * mouseSensitivity;
                 localRotation.y -= Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-                if(localRotation.y < -15f)
+                if (localRotation.y < -15f)
                 {
                     localRotation.y = -15f;
                 }
-                else if(localRotation.y > 90f)
+                else if (localRotation.y > 90f)
                 {
                     localRotation.y = 90f;
                 }
+
+                Quaternion qT = Quaternion.Euler(localRotation.y, localRotation.x, 0);
+                this.parent.rotation = Quaternion.Lerp(this.parent.rotation, qT, Time.deltaTime * orbitSpeed);
             }
         }
-
-        Quaternion qT = Quaternion.Euler(localRotation.y, localRotation.x, 0);
-        this.parent.rotation = Quaternion.Lerp(this.parent.rotation, qT, Time.deltaTime * orbitSpeed);
 	}
 }

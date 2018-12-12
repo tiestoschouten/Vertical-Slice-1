@@ -4,102 +4,212 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
-
-    // Movement forward = A/W/S/D
-    // While standing and pushing button W go forward
-    // While standing still and moving A/D go left/right
-    // While standing and pushing button S go backwards
-    // While going left and right and pushing button W go forward -45/45 degrees (North/East or North/West)
-    // While going left and right and pushing button S go backwards -180/ degrees (South/East or South/West)
-    // While going W or S and pushing A/D go (North/East or North/West or South/East or South/West)
-
-
-
     private float moveSpeed = 3f;
     private float cameraRotation;
     public GameObject cameraPosition;
+    private bool leftMovement = true; private bool rightMovement = true; private bool forwardMovement = true; private bool backwardMovement = true;
+    private bool leftCorner = true; private bool rightCorner = true;
+    private bool cornerMovement = false;
+    [SerializeField]
+    public bool lockedMovement = false;
 
     void Update()
     {
         cameraRotation = cameraPosition.transform.rotation.eulerAngles.y;
 
-        // Forwards
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-            if (Input.GetKeyDown(KeyCode.W))
+            // Going Forward
+            if (forwardMovement == true)
             {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                if (Input.GetKey(KeyCode.W))
+                {
+                    backwardMovement = false; leftMovement = false; rightMovement = false;  
+
+                    if (Input.GetKey(KeyCode.W) && (cornerMovement == false))
+                    {
+                       transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                    }
+                }
+                if (Input.GetKeyUp(KeyCode.W))
+                {
+                    forwardMovement = true; backwardMovement = true; leftMovement = true; rightMovement = true;
+                }
+            }
+            // Going Backwards
+            if (backwardMovement == true)
+            {
+                if (Input.GetKey(KeyCode.S))
+                {
+                    forwardMovement = false; leftMovement = false; rightMovement = false;
+                    
+                    if (lockedMovement == false && Input.GetKey(KeyCode.S) && (cornerMovement == false))
+                    {
+                        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation - 180, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+
+                }
+                    if (lockedMovement == true && Input.GetKey(KeyCode.S) && (cornerMovement == false))
+                    {
+                        transform.position += transform.forward * -1 * moveSpeed * Time.deltaTime;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                }
+                }
+                if (Input.GetKeyUp(KeyCode.S))
+                {
+                    forwardMovement = true; backwardMovement = true; leftMovement = true; rightMovement = true;
+                }
+            }
+            // Going Left
+            if (leftMovement == true)
+            {
+                if (Input.GetKey(KeyCode.A))
+                {
+                    forwardMovement = false; backwardMovement = false; rightMovement = false;
+
+                if (lockedMovement == false && Input.GetKey(KeyCode.A) && (cornerMovement == false))
+                {
+                    transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                    Quaternion q = Quaternion.AngleAxis(cameraRotation - 90, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+
+                }
+                if (lockedMovement == true && Input.GetKey(KeyCode.A) && (cornerMovement == false))
+                {
+                    transform.position += transform.right * -1 * moveSpeed * Time.deltaTime;
+                    Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                }
+
+            }
+                if (Input.GetKeyUp(KeyCode.A))
+                {
+                    forwardMovement = true; backwardMovement = true; leftMovement = true; rightMovement = true;
+                }
+            }
+            // Going Right
+            if (rightMovement == true)
+            {
+                if (Input.GetKey(KeyCode.D))
+                {
+                    forwardMovement = false; backwardMovement = false; leftMovement = false;
+
+                if (lockedMovement == false && Input.GetKey(KeyCode.D) && (cornerMovement == false))
+                {
+                    transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                    Quaternion q = Quaternion.AngleAxis(cameraRotation + 90, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+
+                }
+                if (lockedMovement == true && Input.GetKey(KeyCode.D) && (cornerMovement == false))
+                {
+                    transform.position += transform.right * moveSpeed * Time.deltaTime;
+                    Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                }
+            }
+                if (Input.GetKeyUp(KeyCode.D))
+                {
+                    forwardMovement = true; backwardMovement = true; leftMovement = true; rightMovement = true;
+                }
+            }
+
+            // Going Right Up / Right Down
+            if (rightCorner == true)
+            {
+                if (Input.GetKey(KeyCode.D))
+                {
+                    leftCorner = false;
+                    // Right Up
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        cornerMovement = true;
+                    if (lockedMovement == false)
+                    {
+                        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation + 45, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                    }
+                    if (lockedMovement == true)
+                    {
+                        transform.position += ((transform.right * moveSpeed * Time.deltaTime) + (transform.forward * moveSpeed * Time.deltaTime)) / 2;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                    }
+                    }
+                    // Right Down
+                    if (Input.GetKey(KeyCode.S))
+                    {
+                    cornerMovement = true;
+                        if (lockedMovement == false) {
+                        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation + 135, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                        }
+                        if (lockedMovement == true)
+                        {
+                        transform.position += ((transform.right * moveSpeed * Time.deltaTime) + (transform.forward * moveSpeed * Time.deltaTime * -1)) / 2;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                        }
+                    }
+                }
+            if ((Input.GetKeyUp(KeyCode.D)) || (Input.GetKeyUp(KeyCode.W)) || (Input.GetKeyUp(KeyCode.S)))
+            {
+                cornerMovement = false;
+                leftCorner = true;
             }
         }
 
-        // Backwards
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.position += transform.forward * moveSpeed * Time.deltaTime;
-            if (Input.GetKeyDown(KeyCode.S))
+            // Going Left Up / Left Down
+            if (leftCorner == true)
             {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation - 180, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
-            } 
-        }
-
-        // Left Forward / Left Backwards / Left
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-            // Left Forward
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation - 45, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                if (Input.GetKey(KeyCode.A))
+                {
+                    rightCorner = false;
+                    // Left Up
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        cornerMovement = true;
+                    if (lockedMovement == false)
+                    {
+                        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation - 45, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                    }
+                    if (lockedMovement == true)
+                    {
+                        transform.position += ((transform.right * moveSpeed * Time.deltaTime * -1) + (transform.forward * moveSpeed * Time.deltaTime)) / 2;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                    }
+                } 
+                    // Right Up
+                    if (Input.GetKey(KeyCode.S))
+                    {
+                        cornerMovement = true;
+                    if (lockedMovement == false)
+                    {
+                        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation - 135, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                    }
+                    if (lockedMovement == true)
+                    {
+                        transform.position += ((transform.right * moveSpeed * Time.deltaTime * -1) + (transform.forward * moveSpeed * Time.deltaTime * -1)) / 2;
+                        Quaternion q = Quaternion.AngleAxis(cameraRotation, Vector3.up);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                    }
+                }
             }
-            else
-            // Left Backwards
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation - 135, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
+                if ((Input.GetKeyUp(KeyCode.A)) || (Input.GetKeyUp(KeyCode.W)) || (Input.GetKeyUp(KeyCode.S)))
+                {
+                    cornerMovement = false;
+                    rightCorner = true;
+                }
             }
-            else
-            // Left
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation - 90, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
-            }
-        }
-        else
-        // Right Forward / Right Backwards / Right
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-            // Right Forward
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation + 45, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
-            }
-            else
-            // Right Backwards
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation + 135, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
-            }
-            else
-            // Right
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Quaternion q = Quaternion.AngleAxis(cameraRotation + 90, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 360);
-            } 
-        }
     }
 }
 

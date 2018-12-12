@@ -5,8 +5,8 @@ using UnityEngine;
 public class FireBalls : MonoBehaviour {
 
     public float speed;
-    public float stoppingDistance;
-    public float retreatDistance;
+    //public float stoppingDistance;
+    //public float retreatDistance;
 
     public float timeToShoot;
     private float timeBtwShots;
@@ -16,7 +16,6 @@ public class FireBalls : MonoBehaviour {
     public Transform player;
 	
 	void Start () {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
 
         timeBtwShots = startTimeBtwShots;
         timeToShoot = Time.deltaTime;
@@ -24,7 +23,7 @@ public class FireBalls : MonoBehaviour {
 	
 
 	void Update () {
-
+        /*
         //vanaf hier zijn de codes die de enemy LINK laat volgen en afstand houden.
         if (Vector3.Distance(transform.position, player.position) > stoppingDistance)
         {
@@ -40,7 +39,7 @@ public class FireBalls : MonoBehaviour {
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, -speed * Time.deltaTime);
         }
-        //hier eindigt het volgen(de codes).
+        //hier eindigt het volgen(de codes).*/
 
         //Codes van het Schieten(FireBals) begint hier.
         if(timeBtwShots <= 0)
